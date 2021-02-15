@@ -16,6 +16,6 @@ http.createServer((req, res) => {
             }
         });
     }
-}).listen(3000, () => {
-    console.log("Server started at 3000");
+}).listen((process.env.PORT || 3000), () => {
+    console.log(`Server started at ${process.env.PORT || 3000}`);
 });
