@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/Evgenii-K/JavaScript_advenced_course/issues"
   },
-  "homepage": "https://github.com/Evgenii-K/JavaScript_advenced_course#readme"
+  "homepage": "https://github.com/Evgenii-K/JavaScript_advenced_course#readme",
+  "dependencies": {
+    "mime": "^2.5.0"
+  }
 }

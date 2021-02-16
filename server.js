@@ -1,12 +1,14 @@
-const http = require('http');
-const fs = require('fs');
-const port = process.env.PORT || 3000;
-const dirWay = './public/';
+const http = require('http'),
+      fs = require('fs'),
+      mime = require('mime'),
+      port = process.env.PORT || 3000,
+      dirWay = './public/';
 
 http.createServer((req, res) => {
     // добавляем к запросу путь к папке
     const filePath = dirWay + req.url.substr(1);
     console.log(`Запрошенный url: ${filePath}`);
+    console.log(`Тип файла: ${mime.getType(filePath)}`);
 
     if (filePath === dirWay) {
         res.end(fs.readFileSync('./public/index.html', 'utf8'));
@@ -18,6 +20,7 @@ http.createServer((req, res) => {
                 res.end("Resourse not found!");
             }
             else{
+                res.setHeader('Content-Type', mime.getType(filePath));
                 fs.createReadStream(filePath).pipe(res);
             }
         });
