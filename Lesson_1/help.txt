@@ -6,8 +6,6 @@ https://nodejs.org/en/docs/guides/
 
 мехонизм - при запросе файла отдавать нужный файл
 
-
-
 регистрация на сайте heroku,
 
 create app

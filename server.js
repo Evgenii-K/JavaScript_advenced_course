@@ -1,21 +1,26 @@
 const http = require('http');
 const fs = require('fs');
+const port = process.env.PORT || 3000;
 
 http.createServer((req, res) => {
+    // добавляем к запросу путь к папке
     const filePath = './public/' + req.url.substr(1);
-    console.log(`Запрошенный адрес: ${filePath}`);
+    console.log(`Запрошенный url: ${filePath}`);
+
     if (filePath === './public/') {
         res.end(fs.readFileSync('./public/index.html', 'utf8'));
     } else {
-        fs.readFile(filePath, (error, data) => {
-            if (error) {
+        fs.access(filePath, fs.constants.R_OK, err => {
+            // если произошла ошибка - отправляем статусный код 404
+            if(err){
                 res.statusCode = 404;
-                res.end("Reosourse not found!");
-            } else {
-                res.end(data);
+                res.end("Resourse not found!");
+            }
+            else{
+                fs.createReadStream(filePath).pipe(res);
             }
         });
     }
-}).listen((process.env.PORT || 3000), () => {
-    console.log(`Server started at ${process.env.PORT || 3000}`);
+}).listen((port), () => {
+    console.log(`Server started at ${port}`);
 });
