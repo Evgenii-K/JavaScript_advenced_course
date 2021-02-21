@@ -60,10 +60,25 @@
   }
 
   &__link-close {
-    width: 12px;
-    height: 12px;
-    cursor: pointer;
-    fill: $pageColor;
+    background-color: white;
+    // cursor: pointer;
+
+    svg {
+      width: 16px;
+      height: 16px;
+      fill: $pageColor;
+    }
+  }
+
+  &__item--plus {
+    background-color: white;
+    // cursor: pointer;
+
+    svg {
+      width: 16px;
+      height: 16px;
+      fill: $pageColor;
+    }
   }
 
   &__display--none {
@@ -73,6 +88,28 @@
   &__list {
     margin: 10px;
   }
+
+  &__item--quantity {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  // &__item {
+  //   margin-bottom: 10px;
+  // }
+
+  &__item--wrapper {
+    margin: 10px;
+
+    hr {
+      margin-top: 10px;
+      border: none;
+      background-color: $pageColor;
+      color: $pageColor;
+      height: 2px;
+    }
+  }
+
 }
 
 /*catalog

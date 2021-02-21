@@ -14,8 +14,7 @@
 'use strict';
 
 const goods = document.querySelector('.goods'),
-      card = document.querySelector('.card'),
-      linkClose = card.querySelector('.card__link-close');
+      cardHeading = document.querySelector('.card__heading');
 
 const products = [
     {img: 'item_1.jpg', name: 'Shirt', price: 150},
@@ -27,18 +26,15 @@ const products = [
 ];
 
 let cardProduct = [];
-
-linkClose.addEventListener('click', () => {
-    card.classList.toggle('card__display--none');
-});
-
 class Button {
     text = '';
     placeToRender = '';
+    styleClass = '';
 
-    constructor(text, placeToRender) {
+    constructor(text, placeToRender, styleClass) {
         this.text = text;
         this.placeToRender = placeToRender;
+        this.styleClass = styleClass;
         this.render();
     }
     
@@ -48,8 +44,8 @@ class Button {
 
     getTemplate() {
         const btn = document.createElement('button');
-        btn.classList.add('btn');
-        btn.innerText = this.text;
+        btn.classList.add(this.styleClass);
+        btn.innerHTML = this.text;
 
         return btn;
     }
@@ -64,49 +60,74 @@ class Button {
             });
         }
     }
+}
 
+class SvgBtn extends Button {
+    constructor(text, placeToRender, styleClass) {
+        super(text, placeToRender, styleClass);
+        this.card = document.querySelector('.card');
+    }
+
+    onBtnClick() {
+        this.card.classList.toggle('card__display--none');
+    }
+}
+
+class CardBtn extends SvgBtn {
+
+    constructor(text, placeToRender, styleClass) {
+        super(text, placeToRender, styleClass);
+    }
+
+    onBtnClick() {
+        CardListInst.createArr();
+        this.card.classList.toggle('card__display--none');
+    }
+}
+
+class Quantity extends Button {
+
+    constructor(text, placeToRender, styleClass, math, name) {
+        super(text, placeToRender, styleClass);
+        this._math = math;
+        this._name = name;
+    }
+
+    onBtnClick() {
+
+        const i = cardProduct.findIndex(item => item.name === this._name);
+        if (this._math == 'plus') {
+            cardProduct[i].quantity++;
+            CardListInst.createArr();
+        } else if (this._math == 'minus') {
+            if (cardProduct[i].quantity > 1) {
+                cardProduct[i].quantity--;
+                CardListInst.createArr();
+            }
+        } else if (this._math == 'delet') {
+            cardProduct.splice(i, 1);
+            CardListInst.createArr();
+        }
+    }
 }
 
 class AddItemBtn extends Button {
 
-    constructor(text, placeToRender, name, price) {
-        super(text, placeToRender);
+    constructor(text, placeToRender, styleClass, name, price) {
+        super(text, placeToRender, styleClass);
         this._name = name;
         this._price = price;
-    }
-
-    fetchGoods () {
-        return [
-            {img: 'item_1.jpg', name: 'Shirt', price: 150},
-            {img: 'item_2.jpg', name: 'Socks', price: 15},
-            {img: 'item_3.jpg', name: 'Jacket', price: 50},
-            {img: 'item_4.jpg', name: 'Shoes', price: 1500},
-            {img: 'item_5.jpg', name: 'Black Shirt', price: 130},
-            {img: 'item_6.jpg', name: 'Rad Socks', price: 20},
-        ];
     }
 
     onBtnClick() {
         const i = cardProduct.findIndex(item => item.name === this._name);
         if (i != -1) {
             cardProduct[i].quantity++;
+            CardListInst.createArr();
         } else {
             cardProduct.push({name: this._name, price: this._price, quantity: 1}); 
+            CardListInst.createArr();
         }
-
-        console.log(cardProduct);
-    }
-}
-
-class CardBtn extends Button {
-
-    constructor(text, placeToRender) {
-        super(text, placeToRender);
-    }
-
-    onBtnClick() {
-        CardListInst.createArr();
-        card.classList.toggle('card__display--none');
     }
 }
 
@@ -134,6 +155,17 @@ class AbstractList {
         this._items.push(...goods);
 
         this.render();
+    }
+
+    fetchGoods () {
+        return [
+            {img: 'item_1.jpg', name: 'Shirt', price: 150},
+            {img: 'item_2.jpg', name: 'Socks', price: 15},
+            {img: 'item_3.jpg', name: 'Jacket', price: 50},
+            {img: 'item_4.jpg', name: 'Shoes', price: 1500},
+            {img: 'item_5.jpg', name: 'Black Shirt', price: 130},
+            {img: 'item_6.jpg', name: 'Rad Socks', price: 20},
+        ];
     }
 
     render() {
@@ -164,7 +196,7 @@ class GoodItem {
                                <h3>${this._name}</h3>
                                <p>Price: ${this._price}$</p>`;
             placeToRender.appendChild(block);
-            const ButtonInstabce = new AddItemBtn('Add to card', block, this._name, this._price);
+            new AddItemBtn('Add to card', block, 'btn', this._name, this._price);
         }
     }
 }
@@ -184,20 +216,57 @@ class CardItem {
     render() {
         const placeToRender = document.querySelector('.card__list');
         if (placeToRender) {
-            const block = document.createElement('div');
-            block.classList.add('card__item');
-            block.innerHTML = `<h3>${this._name}</h3>
+
+            const wrapper = document.createElement('div');
+            wrapper.classList.add('card__item--wrapper');
+            placeToRender.appendChild(wrapper);
+
+            const item = document.createElement('div');
+            item.classList.add('card__item');
+            item.innerHTML = `<h3>${this._name}</h3>
                                <p>Price: ${this._price}$</p>
-                               <p>Quantity: ${this._quantity}</p>
-                               <br>`;
-            placeToRender.appendChild(block);
+                               `;
+            wrapper.appendChild(item);
+
+            const quantityDiv = document.createElement('div');
+            quantityDiv.classList.add('card__item--quantity');
+            quantityDiv.innerHTML = `<p>Quantity:</p>`;
+            wrapper.appendChild(quantityDiv);
+
+            new Quantity(
+                `<svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.2453 9L17.5302 2.71516C17.8285 2.41741 17.9962 2.01336 17.9966 1.59191C17.997 1.17045 17.8299 0.76611 17.5322 0.467833C17.2344 0.169555 16.8304 0.00177586 16.4089 0.00140366C15.9875 0.00103146 15.5831 0.168097 15.2848 0.465848L9 6.75069L2.71516 0.465848C2.41688 0.167571 2.01233 0 1.5905 0C1.16868 0 0.764125 0.167571 0.465848 0.465848C0.167571 0.764125 0 1.16868 0 1.5905C0 2.01233 0.167571 2.41688 0.465848 2.71516L6.75069 9L0.465848 15.2848C0.167571 15.5831 0 15.9877 0 16.4095C0 16.8313 0.167571 17.2359 0.465848 17.5342C0.764125 17.8324 1.16868 18 1.5905 18C2.01233 18 2.41688 17.8324 2.71516 17.5342L9 11.2493L15.2848 17.5342C15.5831 17.8324 15.9877 18 16.4095 18C16.8313 18 17.2359 17.8324 17.5342 17.5342C17.8324 17.2359 18 16.8313 18 16.4095C18 15.9877 17.8324 15.5831 17.5342 15.2848L11.2453 9Z" />
+                </svg>`,
+                quantityDiv,
+                ('card__link-close', 'card__item--plus'),
+                'minus',
+                this._name
+            );
+            quantityDiv.insertAdjacentHTML('beforeend', `${this._quantity}`);
+            new Quantity(
+                `<svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.2453 9L17.5302 2.71516C17.8285 2.41741 17.9962 2.01336 17.9966 1.59191C17.997 1.17045 17.8299 0.76611 17.5322 0.467833C17.2344 0.169555 16.8304 0.00177586 16.4089 0.00140366C15.9875 0.00103146 15.5831 0.168097 15.2848 0.465848L9 6.75069L2.71516 0.465848C2.41688 0.167571 2.01233 0 1.5905 0C1.16868 0 0.764125 0.167571 0.465848 0.465848C0.167571 0.764125 0 1.16868 0 1.5905C0 2.01233 0.167571 2.41688 0.465848 2.71516L6.75069 9L0.465848 15.2848C0.167571 15.5831 0 15.9877 0 16.4095C0 16.8313 0.167571 17.2359 0.465848 17.5342C0.764125 17.8324 1.16868 18 1.5905 18C2.01233 18 2.41688 17.8324 2.71516 17.5342L9 11.2493L15.2848 17.5342C15.5831 17.8324 15.9877 18 16.4095 18C16.8313 18 17.2359 17.8324 17.5342 17.5342C17.8324 17.2359 18 16.8313 18 16.4095C18 15.9877 17.8324 15.5831 17.5342 15.2848L11.2453 9Z" />
+                </svg>`,
+                quantityDiv,
+                'card__link-close',
+                'plus',
+                this._name
+            );
+            new Quantity(
+                `<svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.2453 9L17.5302 2.71516C17.8285 2.41741 17.9962 2.01336 17.9966 1.59191C17.997 1.17045 17.8299 0.76611 17.5322 0.467833C17.2344 0.169555 16.8304 0.00177586 16.4089 0.00140366C15.9875 0.00103146 15.5831 0.168097 15.2848 0.465848L9 6.75069L2.71516 0.465848C2.41688 0.167571 2.01233 0 1.5905 0C1.16868 0 0.764125 0.167571 0.465848 0.465848C0.167571 0.764125 0 1.16868 0 1.5905C0 2.01233 0.167571 2.41688 0.465848 2.71516L6.75069 9L0.465848 15.2848C0.167571 15.5831 0 15.9877 0 16.4095C0 16.8313 0.167571 17.2359 0.465848 17.5342C0.764125 17.8324 1.16868 18 1.5905 18C2.01233 18 2.41688 17.8324 2.71516 17.5342L9 11.2493L15.2848 17.5342C15.5831 17.8324 15.9877 18 16.4095 18C16.8313 18 17.2359 17.8324 17.5342 17.5342C17.8324 17.2359 18 16.8313 18 16.4095C18 15.9877 17.8324 15.5831 17.5342 15.2848L11.2453 9Z" />
+                </svg>`,
+                quantityDiv,
+                'card__link-close',
+                'delet',
+                this._name
+            );
+
+
+            wrapper.insertAdjacentHTML("beforeend", `<p>Sum: ${this._quantity * this._price}$</p><hr>`);
         }
     }
 }
-
-const ListInstance = new AbstractList(products, GoodItem);
-
-const CardBtnInst = new CardBtn('Card', goods);
 
 class CardList extends AbstractList {
     
@@ -206,16 +275,47 @@ class CardList extends AbstractList {
     }
 
     render() {
-        if(this._arr.length > 0) {
-            const placeToRender = document.querySelector('.card__list');
-            if (placeToRender) {
+
+        const placeToRender = document.querySelector('.card__list');
+        if (placeToRender) {
+            // Рендер карточек если есть товары в корзине 
+            if(this._arr.length > 0) {
                 placeToRender.innerHTML = '';
                 this._items.forEach(good => {
                     good.render();
                 });
+                // Подсчёт суммы в корзине
+                let sum = 0;
+                this._arr.forEach(item => {
+                    sum += (item.price * item.quantity); 
+                });
+                placeToRender.insertAdjacentHTML('beforeend', `<h3>Total sum: ${sum}</h3>`);
+            // Если корзины пустая редерим сообщение об этом
+            } else {
+                placeToRender.innerHTML = '<div class="cart__empty">Cart is empty</div>';
             }
         }
     }
 }
 
+
+new AbstractList(products, GoodItem);
+
+new CardBtn('Card', goods, 'btn');
+
 const CardListInst = new CardList(cardProduct, CardItem);
+
+new SvgBtn(
+    `<svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M11.2453 9L17.5302 2.71516C17.8285 2.41741 17.9962 2.01336 17.9966 1.59191C17.997 1.17045 17.8299 0.76611 17.5322 0.467833C17.2344 0.169555 16.8304 0.00177586 16.4089 0.00140366C15.9875 0.00103146 15.5831 0.168097 15.2848 0.465848L9 6.75069L2.71516 0.465848C2.41688 0.167571 2.01233 0 1.5905 0C1.16868 0 0.764125 0.167571 0.465848 0.465848C0.167571 0.764125 0 1.16868 0 1.5905C0 2.01233 0.167571 2.41688 0.465848 2.71516L6.75069 9L0.465848 15.2848C0.167571 15.5831 0 15.9877 0 16.4095C0 16.8313 0.167571 17.2359 0.465848 17.5342C0.764125 17.8324 1.16868 18 1.5905 18C2.01233 18 2.41688 17.8324 2.71516 17.5342L9 11.2493L15.2848 17.5342C15.5831 17.8324 15.9877 18 16.4095 18C16.8313 18 17.2359 17.8324 17.5342 17.5342C17.8324 17.2359 18 16.8313 18 16.4095C18 15.9877 17.8324 15.5831 17.5342 15.2848L11.2453 9Z" />
+    </svg>`,
+    cardHeading,
+    'card__link-close'
+);
+
+document.querySelector('.catalog').addEventListener('click', () => {
+    const card = document.querySelector('.card');
+    if (card.classList.contains != 'card__display--none') {
+        card.classList.add('card__display--none');
+    }
+});

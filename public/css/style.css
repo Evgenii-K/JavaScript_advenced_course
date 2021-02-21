@@ -174,9 +174,22 @@ p {
 }
 
 .card__link-close {
-  width: 12px;
-  height: 12px;
-  cursor: pointer;
+  background-color: white;
+}
+
+.card__link-close svg {
+  width: 16px;
+  height: 16px;
+  fill: darkgray;
+}
+
+.card__item--plus {
+  background-color: white;
+}
+
+.card__item--plus svg {
+  width: 16px;
+  height: 16px;
   fill: darkgray;
 }
 
@@ -186,6 +199,27 @@ p {
 
 .card__list {
   margin: 10px;
+}
+
+.card__item--quantity {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.card__item--wrapper {
+  margin: 10px;
+}
+
+.card__item--wrapper hr {
+  margin-top: 10px;
+  border: none;
+  background-color: darkgray;
+  color: darkgray;
+  height: 2px;
 }
 
 /*catalog
