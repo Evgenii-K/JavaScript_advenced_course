@@ -16,129 +16,19 @@
 const goods = document.querySelector('.goods'),
       cardHeading = document.querySelector('.card__heading');
 
-const products = [
-    {img: 'item_1.jpg', name: 'Shirt', price: 150},
-    {img: 'item_2.jpg', name: 'Socks', price: 15},
-    {img: 'item_3.jpg', name: 'Jacket', price: 50},
-    {img: 'item_4.jpg', name: 'Shoes', price: 1500},
-    {img: 'item_5.jpg', name: 'Black Shirt', price: 130},
-    {img: 'item_6.jpg', name: 'Rad Socks', price: 20},
-];
-
-let cardProduct = [];
-class Button {
-    text = '';
-    placeToRender = '';
-    styleClass = '';
-
-    constructor(text, placeToRender, styleClass) {
-        this.text = text;
-        this.placeToRender = placeToRender;
-        this.styleClass = styleClass;
-        this.render();
-    }
-    
-    onBtnClick() {
-        console.log('Clicked!');
-    }
-
-    getTemplate() {
-        const btn = document.createElement('button');
-        btn.classList.add(this.styleClass);
-        btn.innerHTML = this.text;
-
-        return btn;
-    }
-
-    render() {
-        if(this.placeToRender) {
-            const btn = this.getTemplate();
-            this.placeToRender.appendChild(btn);
-
-            btn.addEventListener('click', () => {
-                this.onBtnClick();
-            });
-        }
-    }
-}
-
-// Кнопка корзины
-class CardBtn extends Button {
-    constructor(text, placeToRender, styleClass) {
-        super(text, placeToRender, styleClass);
-        this.card = document.querySelector('.card');
-    }
-
-    onBtnClick() {
-        this.card.classList.toggle('card__display--none');
-    }
-}
-
-// Кнопка изменениния колличества товара и удаления из корзины
-class Quantity extends Button {
-
-    constructor(text, placeToRender, styleClass, math, name) {
-        super(text, placeToRender, styleClass);
-        this._math = math;
-        this._name = name;
-    }
-
-    onBtnClick() {
-
-        const i = cardProduct.findIndex(item => item.name === this._name);
-        if (this._math == 'plus') {
-            cardProduct[i].quantity++;
-            CardListInst.createArr();
-        } else if (this._math == 'minus') {
-            if (cardProduct[i].quantity > 1) {
-                cardProduct[i].quantity--;
-                CardListInst.createArr();
-            }
-        } else if (this._math == 'delete') {
-            cardProduct.splice(i, 1);
-            CardListInst.createArr();
-        }
-    }
-}
-
-// Кнопка добавления в корзину
-class AddItemBtn extends Button {
-
-    constructor(text, placeToRender, styleClass, name, price) {
-        super(text, placeToRender, styleClass);
-        this._name = name;
-        this._price = price;
-    }
-
-    onBtnClick() {
-        const i = cardProduct.findIndex(item => item.name === this._name);
-        if (i != -1) {
-            cardProduct[i].quantity++;
-            CardListInst.createArr();
-        } else {
-            cardProduct.push({name: this._name, price: this._price, quantity: 1}); 
-            CardListInst.createArr();
-        }
-    }
-}
-
-
 class AbstractList {
     _items = [];
-    _arr = [];
     _class = '';
 
-    constructor(arr, classItem) {
+    constructor(classItem) {
 
-        this._arr = arr;
         this._class = classItem;
         this.createArr();
     }
 
     createArr() {
-        this._items = [];
 
-        let goods = this._arr;
+        let goods = this.fetchGoods();
 
         goods = goods.map(cur => {
             return new this._class(cur);
@@ -150,14 +40,7 @@ class AbstractList {
     }
 
     fetchGoods () {
-        return [
-            {img: 'item_1.jpg', name: 'Shirt', price: 150},
-            {img: 'item_2.jpg', name: 'Socks', price: 15},
-            {img: 'item_3.jpg', name: 'Jacket', price: 50},
-            {img: 'item_4.jpg', name: 'Shoes', price: 1500},
-            {img: 'item_5.jpg', name: 'Black Shirt', price: 130},
-            {img: 'item_6.jpg', name: 'Rad Socks', price: 20},
-        ];
+        return [];
     }
 
     render() {
@@ -167,6 +50,70 @@ class AbstractList {
     }
 }
 
+ // Рендер товаров
+
+class ProductsList extends AbstractList {
+
+    constructor(classItem) {
+        super(classItem);
+    }
+
+    fetchGoods () {
+        return products;
+    }
+}
+
+ // Рендер корзины
+class CardList extends AbstractList {
+    
+    constructor(classItem) {
+        super(classItem);
+    }
+
+    createArr() {
+        this._items = [];
+
+        let goods = this.fetchGoods();
+
+        goods = goods.map(cur => {
+            return new this._class(cur);
+        });
+
+        this._items.push(...goods);
+
+        this.render();
+    }
+
+    fetchGoods () {
+        return cardProduct;
+    }
+
+    render() {
+
+        const placeToRender = document.querySelector('.card__list');
+        if (placeToRender) {
+            // Рендер карточек если есть товары в корзине 
+            if(this._items.length > 0) {
+                placeToRender.innerHTML = '';
+                this._items.forEach(good => {
+                    good.render();
+                });
+                // Подсчёт суммы в корзине
+                let sum = 0;
+                const totalItems = this.fetchGoods();
+                totalItems.forEach(item => {
+                    sum += (item.price * item.quantity); 
+                });
+                placeToRender.insertAdjacentHTML('beforeend', `<h3>Total sum: ${sum}</h3>`);
+            // Если корзины пустая редерим сообщение об этом
+            } else {
+                placeToRender.innerHTML = '<div class="cart__empty">Cart is empty</div>';
+            }
+        }
+    }
+}
+
+ // Рендер карточек товаров
 class GoodItem {
 
     _img = '';
@@ -193,6 +140,7 @@ class GoodItem {
     }
 }
 
+ // Рендер товаров в корзине
 class CardItem {
 
     _name = '';
@@ -254,42 +202,14 @@ class CardItem {
     }
 }
 
-class CardList extends AbstractList {
-    
-    constructor(arr, classItem) {
-        super(arr, classItem);
-    }
-
-    render() {
-
-        const placeToRender = document.querySelector('.card__list');
-        if (placeToRender) {
-            // Рендер карточек если есть товары в корзине 
-            if(this._arr.length > 0) {
-                placeToRender.innerHTML = '';
-                this._items.forEach(good => {
-                    good.render();
-                });
-                // Подсчёт суммы в корзине
-                let sum = 0;
-                this._arr.forEach(item => {
-                    sum += (item.price * item.quantity); 
-                });
-                placeToRender.insertAdjacentHTML('beforeend', `<h3>Total sum: ${sum}</h3>`);
-            // Если корзины пустая редерим сообщение об этом
-            } else {
-                placeToRender.innerHTML = '<div class="cart__empty">Cart is empty</div>';
-            }
-        }
-    }
-}
 
 
-new AbstractList(products, GoodItem);
+
+new ProductsList(GoodItem);
 
 new CardBtn('Card', goods, 'btn');
 
-const CardListInst = new CardList(cardProduct, CardItem);
+const CardListInst = new CardList(CardItem);
 
 new CardBtn(
     `<svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
