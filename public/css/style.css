@@ -183,14 +183,14 @@ p {
   fill: darkgray;
 }
 
-.card__item--plus {
-  background-color: white;
+.card__link-close svg:hover {
+  fill: red;
 }
 
-.card__item--plus svg {
+.card__item--plus, .card__item--minus {
+  background-color: white;
   width: 16px;
   height: 16px;
-  fill: darkgray;
 }
 
 .card__display--none {
@@ -286,5 +286,19 @@ p {
   border: 2px solid darkgray;
   width: 100px;
   height: 30px;
+}
+
+.btn:hover {
+  color: red;
+}
+
+.btn--delete {
+  background-color: white;
+  width: 100px;
+  height: 16px;
+}
+
+.btn--delete:hover {
+  color: red;
 }
 /*# sourceMappingURL=style.css.map */

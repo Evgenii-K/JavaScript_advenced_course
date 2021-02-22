@@ -61,24 +61,23 @@
 
   &__link-close {
     background-color: white;
-    // cursor: pointer;
 
     svg {
       width: 16px;
       height: 16px;
       fill: $pageColor;
+
+      &:hover {
+        fill: red;
+      }
     }
   }
 
-  &__item--plus {
+  &__item--plus,
+  &__item--minus {
     background-color: white;
-    // cursor: pointer;
-
-    svg {
-      width: 16px;
-      height: 16px;
-      fill: $pageColor;
-    }
+    width: 16px;
+    height: 16px;
   }
 
   &__display--none {
@@ -93,10 +92,6 @@
     display: flex;
     justify-content: space-between;
   }
-
-  // &__item {
-  //   margin-bottom: 10px;
-  // }
 
   &__item--wrapper {
     margin: 10px;
@@ -160,4 +155,18 @@
   border: 2px solid $pageColor;
   width: 100px;
   height: 30px;
+
+  &:hover {
+    color: red;
+  }
+}
+
+.btn--delete {
+  background-color: white;
+  width: 100px;
+  height: 16px;
+
+  &:hover {
+    color: red;
+  }
 }
