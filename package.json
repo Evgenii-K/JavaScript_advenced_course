@@ -1,23 +1,15 @@
 {
-  "name": "servertest",
+  "name": "javascript_advenced_course_tmp",
   "version": "1.0.0",
-  "description": "server test 1.0.0",
-  "main": "script.js",
+  "description": "test server",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/Evgenii-K/JavaScript_advenced_course.git"
-  },
-  "author": "Evgeny K",
+  "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Evgenii-K/JavaScript_advenced_course/issues"
-  },
-  "homepage": "https://github.com/Evgenii-K/JavaScript_advenced_course#readme",
   "dependencies": {
-    "mime": "^2.5.0"
+    "mime": "^2.5.2"
   }
 }
