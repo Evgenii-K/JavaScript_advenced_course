@@ -22,23 +22,31 @@ class AbstractList {
         this._class = classItem;
     }
 
-    createArr() {
-
-        this.fetchGoods()
-        .then(res => {
-            return res.json();
-        })
-        .then(data =>{
-            const goods = data.products.map(cur => {
-                return new this._class(cur);
+    createArr(typeOfFile) {
+ 
+        if (typeOfFile == 'jsonFile') {
+            this.fetchGoods()
+            .then(res => {
+                return res.json();
+            })
+            .then(data =>{
+                this.runRender(data.products);
+            })
+            .catch(err => {
+                console.warn(err);
             });
-            this._items = [];
-            this._items.push(...goods);
-            this.render();
-        })
-        .catch(err => {
-            console.warn(err);
+        } else if (typeOfFile == 'arrFile') {
+            this.runRender(this.fetchGoods());
+        }
+    }
+
+    runRender (renderArr) {
+        const goods = renderArr.map(cur => {
+            return new this._class(cur);
         });
+        this._items = [];
+        this._items.push(...goods);
+        this.render();
     }
 
     fetchGoods () {
@@ -101,13 +109,13 @@ class ProductsList extends AbstractList {
                 const dataUrl = data.dataUrl;
                 this._dataList.push(...dataUrl);
                 if (this._dataList.length > 1) {
-                    new AddItemBtn('Show more', wrapper, 'btn__show-more', this.createArr.bind(this));
+                    new AddItemBtn('Show more', wrapper, 'btn__show-more', this.createArr.bind(this, 'jsonFile'));
                 }
-                this.createArr();
+                this.createArr('jsonFile');
             })
             .catch((err) => {
                 console.warn(err);
-                this.createArr();
+                this.createArr('jsonFile');
             });    
     }
 }
@@ -117,21 +125,7 @@ class CardList extends AbstractList {
     
     constructor(classItem) {
         super(classItem);
-        this.createArr();
-    }
-
-    createArr() {
-        this._items = [];
-
-        let goods = this.fetchGoods();
-
-        goods = goods.map(cur => {
-            return new this._class(cur);
-        });
-
-        this._items.push(...goods);
-
-        this.render();
+        this.createArr('arrFile');
     }
 
     fetchGoods () {
@@ -180,10 +174,10 @@ class GoodItem {
         const i = cardProduct.findIndex(item => item.name === this._name);
         if (i != -1) {
             cardProduct[i].quantity++;
-            CardListInst.createArr();
+            CardListInst.createArr('arrFile');
         } else {
             cardProduct.push({name: this._name, price: this._price, quantity: 1}); 
-            CardListInst.createArr();
+            CardListInst.createArr('arrFile');
         }
     }
 
@@ -219,15 +213,15 @@ class CardItem {
         const i = cardProduct.findIndex(item => item.name === this._name);
         if (math == 'plus') {
             cardProduct[i].quantity++;
-            CardListInst.createArr();
+            CardListInst.createArr('arrFile');
         } else if (math == 'minus') {
             if (cardProduct[i].quantity > 1) {
                 cardProduct[i].quantity--;
-                CardListInst.createArr();
+                CardListInst.createArr('arrFile');
             }
         } else if (math == 'delete') {
             cardProduct.splice(i, 1);
-            CardListInst.createArr();
+            CardListInst.createArr('arrFile');
         }
     }
 
