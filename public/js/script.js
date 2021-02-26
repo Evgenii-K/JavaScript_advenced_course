@@ -39,7 +39,6 @@ class AbstractList {
         .catch(err => {
             console.warn(err);
         });
-
     }
 
     fetchGoods () {
@@ -57,8 +56,8 @@ class AbstractList {
 
 class ProductsList extends AbstractList {
 
-    _dataList = [];
-    _dataUrlPage = 0;
+    _dataList = []; //Список url на json файлы
+    _dataUrlPage = 0; //Номер текущей страницы
 
     constructor(classItem) {
         super(classItem);
@@ -69,8 +68,6 @@ class ProductsList extends AbstractList {
     fetchGoods () {
 
         // Получем url json файла со списком товаров на текущей странице
-        // Если списка не существует или он пуст, выводим сообщение "Каталог пуст"
-
         if (this._dataList && this._dataList.length > 0) {
             let url = this._dataList[this._dataUrlPage].url;
             this._dataUrlPage++;
@@ -83,6 +80,7 @@ class ProductsList extends AbstractList {
             }
             return fetch(url);
         } else {
+            // Если списка не существует или он пуст, выводим сообщение "Каталог пуст"
             wrapper.querySelector('.catalog').innerHTML = '<div class="cart__empty">Catalog is empty</div>';
         }
     }
@@ -93,7 +91,11 @@ class ProductsList extends AbstractList {
         let urlDataList = "http://localhost:3000/database/dataList.json";
         fetch(urlDataList)
             .then(res => {
-                return res.json();
+                if (res.status == 200) {
+                    return res.json();
+                } else {
+                    throw new Error('Json file not found!');
+                }
             })
             .then(data => {
                 const dataUrl = data.dataUrl;
@@ -105,7 +107,6 @@ class ProductsList extends AbstractList {
             })
             .catch((err) => {
                 console.warn(err);
-                this._dataList = undefined;
                 this.createArr();
             });    
     }
