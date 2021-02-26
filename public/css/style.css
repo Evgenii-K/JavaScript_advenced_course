@@ -108,6 +108,7 @@ p {
   =======================*/
 .wrapper {
   margin: 0 5px;
+
   min-height: 100%;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -137,6 +138,7 @@ p {
 /*center
   =======================*/
 .header {
+
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -162,6 +164,7 @@ p {
 
 .card__heading {
   margin: 10px;
+
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -242,6 +245,7 @@ p {
   padding: 10px;
   margin-top: 30px;
   border: 2px solid darkgray;
+
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -301,4 +305,5 @@ p {
 .btn--delete:hover {
   color: red;
 }
+
 /*# sourceMappingURL=style.css.map */
