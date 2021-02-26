@@ -77,7 +77,8 @@ class ProductsList extends AbstractList {
 
         // Получем url json файла со списком товаров на текущей странице
         if (this._dataList && this._dataList.length > 0) {
-            let url = this._dataList[this._dataUrlPage].url;
+            // let url = this._dataList[this._dataUrlPage].url;
+            let url = `${document.location.protocol}//${document.location.host}/${this._dataList[this._dataUrlPage].url}`;
             this._dataUrlPage++;
             // Если больше страниц нет, убираем кнопку "Показать ещё"
             if (this._dataUrlPage == this._dataList.length) {
