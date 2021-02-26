@@ -96,7 +96,8 @@ class ProductsList extends AbstractList {
     // Получаем список страниц товара из dataList.json и рендерим кнопку "Показать больше" если страниц > 1
     fetchDataList() {
 
-        let urlDataList = "http://localhost:3000/database/dataList.json";
+        // let urlDataList = "http://localhost:3000/database/dataList.json";
+        let urlDataList = "${document.location.protocol}//${document.location.host}/database/dataList.json";
         fetch(urlDataList)
             .then(res => {
                 if (res.status == 200) {

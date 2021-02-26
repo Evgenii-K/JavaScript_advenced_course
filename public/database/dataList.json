@@ -1,7 +1,7 @@
 {
     "dataUrl": [
-        {"url": "http://localhost:3000/database/data1.json"},
-        {"url": "http://localhost:3000/database/data2.json"},
-        {"url": "http://localhost:3000/database/data3.json"}
+        {"url": "${document.location.protocol}//${document.location.host}/database/data1.json"},
+        {"url": "${document.location.protocol}//${document.location.host}/database/data2.json"},
+        {"url": "${document.location.protocol}//${document.location.host}/database/data3.json"}
     ]
 }
