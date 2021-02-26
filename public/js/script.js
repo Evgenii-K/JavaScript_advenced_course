@@ -97,7 +97,7 @@ class ProductsList extends AbstractList {
     fetchDataList() {
 
         // let urlDataList = "http://localhost:3000/database/dataList.json";
-        let urlDataList = "${document.location.protocol}//${document.location.host}/database/dataList.json";
+        let urlDataList = `${document.location.protocol}//${document.location.host}/database/dataList.json`;
         fetch(urlDataList)
             .then(res => {
                 if (res.status == 200) {
