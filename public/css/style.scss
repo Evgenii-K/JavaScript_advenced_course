@@ -17,6 +17,7 @@
   position: relative;
   overflow-x: hidden;
 
+
   .btn__show-more {
     align-self: center;
   }
@@ -71,7 +72,6 @@
       width: 16px;
       height: 16px;
       fill: $pageColor;
-
       &:hover {
         fill: red;
       }
@@ -84,7 +84,6 @@
     width: 16px;
     height: 16px;
   }
-
   &__display--none {
     display: none;
   }
@@ -97,7 +96,6 @@
     display: flex;
     justify-content: space-between;
   }
-
   &__item--wrapper {
     margin: 10px;
 
@@ -109,7 +107,6 @@
       height: 2px;
     }
   }
-
 }
 
 /*catalog
@@ -153,7 +150,6 @@
     align-self: flex-end;
   }
 }
-
 .btn,
 .btn__show-more {
   background-color: white;

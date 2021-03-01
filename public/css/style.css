@@ -169,6 +169,7 @@ p {
 
 .card__heading {
   margin: 10px;
+
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
