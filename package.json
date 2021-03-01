@@ -1,8 +1,12 @@
 {
-  "name": "servertest",
+  "name": "javascript_advenced_course",
   "version": "1.0.0",
-  "description": "server test 1.0.0",
-  "main": "script.js",
+  "description": "Shop",
+  "main": "server.js",
+  "dependencies": {
+    "mime": "^2.5.0"
+  },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
@@ -16,8 +20,5 @@
   "bugs": {
     "url": "https://github.com/Evgenii-K/JavaScript_advenced_course/issues"
   },
-  "homepage": "https://github.com/Evgenii-K/JavaScript_advenced_course#readme",
-  "dependencies": {
-    "mime": "^2.5.0"
-  }
+  "homepage": "https://github.com/Evgenii-K/JavaScript_advenced_course#readme"
 }
