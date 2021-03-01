@@ -17,9 +17,12 @@ const wrapper  = document.querySelector('.wrapper'),
 class AbstractList {
     _items = [];
     _class = '';
+    _CardListInst = null;
 
-    constructor(classItem) {
+    constructor(classItem, CardListInst, cardProduct) {
         this._class = classItem;
+        this._CardListInst = CardListInst;
+        this._cardProduct = cardProduct;
     }
 
     createArr(typeOfFile) {
@@ -27,36 +30,30 @@ class AbstractList {
         if (typeOfFile == 'jsonFile') {
             this.fetchGoods()
             .then(res => {
-                return res.json();
+                if (res.status == 200) {
+                    return res.json();
+                } else {
+                    throw new Error('Json file not found!');
+                }
             })
             .then(data =>{
-                this.runRender(data.products);
+                this.beforeRender(data.products);
             })
             .catch(err => {
                 console.warn(err);
             });
         } else if (typeOfFile == 'arrFile') {
-            this.runRender(this.fetchGoods());
+            this.beforeRender(this.fetchGoods());
         }
     }
 
-    runRender (renderArr) {
+    beforeRender (renderArr) {
         const goods = renderArr.map(cur => {
-            return new this._class(cur);
+            return new this._class(cur, this._CardListInst);
         });
         this._items = [];
         this._items.push(...goods);
         this.render();
-    }
-
-    fetchGoods () {
-        return [];
-    }
-
-    render() {
-        this._items.forEach(good => {
-            good.render();
-        });
     }
 }
 
@@ -67,8 +64,8 @@ class ProductsList extends AbstractList {
     _dataList = []; //Список url на json файлы
     _dataUrlPage = 0; //Номер текущей страницы
 
-    constructor(classItem) {
-        super(classItem);
+    constructor(classItem, CardListInst) {
+        super(classItem, CardListInst);
         this.fetchDataList();
     }
 
@@ -76,7 +73,7 @@ class ProductsList extends AbstractList {
     fetchGoods () {
 
         // Получем url json файла со списком товаров на текущей странице
-        if (this._dataList && this._dataList.length > 0) {
+        if (this._dataList.length > 0) {
             // let url = this._dataList[this._dataUrlPage].url;
             let url = `${document.location.protocol}//${document.location.host}/${this._dataList[this._dataUrlPage].url}`;
             this._dataUrlPage++;
@@ -89,7 +86,7 @@ class ProductsList extends AbstractList {
             }
             return fetch(url);
         } else {
-            // Если списка не существует или он пуст, выводим сообщение "Каталог пуст"
+            // Если список пуст, выводим сообщение "Каталог пуст"
             wrapper.querySelector('.catalog').innerHTML = '<div class="cart__empty">Catalog is empty</div>';
         }
     }
@@ -117,21 +114,53 @@ class ProductsList extends AbstractList {
             })
             .catch((err) => {
                 console.warn(err);
-                this.createArr('jsonFile');
+                // Если списка не существует, выводим сообщение "Каталог пуст"
+                wrapper.querySelector('.catalog').innerHTML = '<div class="cart__empty">Catalog is empty</div>';
             });    
+    }
+
+    render () {
+        this._items.forEach(good => {
+            good.render();
+        });
     }
 }
 
  // Рендер корзины
 class CardList extends AbstractList {
+
+    _cardProduct = [];
     
-    constructor(classItem) {
+    constructor(classItem, cardProduct) {
         super(classItem);
+        this._CardListInst = this;
+        this._cardProduct = cardProduct;
+        this.createArr('arrFile');
+    }
+
+    add (math, name, price) {
+        this._name = name;
+        this._price = price;
+        const i = this._cardProduct.findIndex(item => item.name === this._name);
+        if (math == 'plus') {
+            // Если товар есть в корзине -> увеличиваем количество
+            if (i != -1) {
+                this._cardProduct[i].quantity++;
+            } else { // Если ещё нет, добавляем в корзину
+                this._cardProduct.push({name: this._name, price: this._price, quantity: 1}); 
+            }
+        } else if (math == 'minus') {
+            if (this._cardProduct[i].quantity > 1) {
+                this._cardProduct[i].quantity--;
+            }
+        } else if (math == 'delete') {
+            this._cardProduct.splice(i, 1);
+        }
         this.createArr('arrFile');
     }
 
     fetchGoods () {
-        return cardProduct;
+        return this._cardProduct;
     }
 
     render() {
@@ -165,22 +194,17 @@ class GoodItem {
     _img = '';
     _name = '';
     _price = 0;
+    _CardListInst = null;
 
-    constructor({img, name, price}) {
+    constructor({img, name, price}, CardListInst) {
         this._img = img;
         this._name = name;
         this._price = price;
+        this._CardListInst = CardListInst;
     }
 
     add() {
-        const i = cardProduct.findIndex(item => item.name === this._name);
-        if (i != -1) {
-            cardProduct[i].quantity++;
-            CardListInst.createArr('arrFile');
-        } else {
-            cardProduct.push({name: this._name, price: this._price, quantity: 1}); 
-            CardListInst.createArr('arrFile');
-        }
+        this._CardListInst.add('plus', this._name, this._price);
     }
 
     render() {
@@ -192,39 +216,29 @@ class GoodItem {
                                <h3>${this._name}</h3>
                                <p>Price: ${this._price}$</p>`;
             placeToRender.appendChild(block);
+            // let addToCard = this.add.bind(this);
             new AddItemBtn('Add to card', block, 'btn', this.add.bind(this));
         }
     }
 }
 
- // Рендер товаров в корзине
+ // Рендер карточки товара в корзине
 class CardItem {
 
     _name = '';
     _price = 0;
     _quantity = 0;
+    _CardListInst = null;
 
-    constructor({name, price, quantity}) {
+    constructor({name, price, quantity}, CardListInst) {
         this._name = name;
         this._price = price;
         this._quantity = quantity;
+        this._CardListInst = CardListInst;
     }
 
     add(math) {
-        
-        const i = cardProduct.findIndex(item => item.name === this._name);
-        if (math == 'plus') {
-            cardProduct[i].quantity++;
-            CardListInst.createArr('arrFile');
-        } else if (math == 'minus') {
-            if (cardProduct[i].quantity > 1) {
-                cardProduct[i].quantity--;
-                CardListInst.createArr('arrFile');
-            }
-        } else if (math == 'delete') {
-            cardProduct.splice(i, 1);
-            CardListInst.createArr('arrFile');
-        }
+        this._CardListInst.add(math, this._name, this._price);
     }
 
     render() {
@@ -276,11 +290,11 @@ class CardItem {
     }
 }
 
-new ProductsList(GoodItem);
+const CardListInst = new CardList(CardItem, cardProduct);
+
+new ProductsList(GoodItem, CardListInst);
 
 new CardBtn('Card', goods, 'btn');
-
-const CardListInst = new CardList(CardItem);
 
 new CardBtn(
     `<svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
