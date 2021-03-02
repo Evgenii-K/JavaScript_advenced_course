@@ -12,7 +12,8 @@
 
 const wrapper  = document.querySelector('.wrapper'),
       goods = wrapper.querySelector('.goods'),
-      cardHeading = wrapper.querySelector('.card__heading');
+      cardHeading = wrapper.querySelector('.card__heading'),
+      catalog = document.querySelector('.catalog');
 
 class AbstractList {
     _items = [];
@@ -108,7 +109,9 @@ class ProductsList extends AbstractList {
                 const dataUrl = data.dataUrl;
                 this._dataList.push(...dataUrl);
                 if (this._dataList.length > 1) {
-                    new AddItemBtn('Show more', wrapper, 'btn__show-more', this.createArr.bind(this, 'jsonFile'));
+                    if (wrapper.querySelector('.catalog')) {
+                        new AddItemBtn('Show more', wrapper, 'btn__show-more', this.createArr.bind(this, 'jsonFile'));
+                    }
                 }
                 this.createArr('jsonFile');
             })
@@ -304,9 +307,12 @@ new CardBtn(
     'card__link-close'
 );
 
-document.querySelector('.catalog').addEventListener('click', () => {
-    const card = document.querySelector('.card');
-    if (card.classList.contains != 'card__display--none') {
-        card.classList.add('card__display--none');
-    }
-});
+if (catalog) {
+    catalog.addEventListener('click', () => {
+        const card = document.querySelector('.card');
+        if (card.classList.contains != 'card__display--none') {
+            card.classList.add('card__display--none');
+        }
+    });
+}
+
