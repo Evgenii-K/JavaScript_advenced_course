@@ -2,16 +2,22 @@
 
 const path = require ('path');
 
-module.exprots = {
-    mode: 'development',
-    entry: './src/js/init.js',
+module.exports = {
+    entry: './src/js/script.js',
     output: {
         filename: 'server.js',
-        path: __dirname + '/public/js'
+        path: path.resolve(__dirname, 'public/js')
     },
-    watch: true,
+    // watch: true,
 
-    devtool: 'source-map',
-
-    module: {}
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                use: [
+                    { loader: 'babel-loader' }
+                ]
+            }
+        ]
+    }
 };
