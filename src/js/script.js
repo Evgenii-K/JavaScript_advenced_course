@@ -37,20 +37,19 @@ if (document.querySelector('.wrapper')) {
             }
         });
     }
-} else if (document.querySelector('form')) {
+} 
+
+if (document.querySelector('form')) {
     const feedbackForm = document.querySelector('form'),
           inputFirst = feedbackForm.querySelector('#First'),
           inputTel = feedbackForm.querySelector('#tel'),
           inputEmail = feedbackForm.querySelector('#email'),
           formBtn = feedbackForm.querySelector('.btn');
 
-    formBtn.addEventListener('click', (e) => {
-        e.preventDefault();
+    formBtn.addEventListener('click', (event) => {
+        event.preventDefault();
         new Valid(/^[A-Z][a-z]+$/, 'g', inputFirst);
         new Valid(/^\+7\(\d{3}\)\d{3}-\d{4}$/, 'g', inputTel);
         new Valid(/^([a-z0-9_\.-]+)@([a-z0-9_\.-]+)\.([a-z\.]{2,6})$/, 'gi', inputEmail);
     });
 }
-
-
-
