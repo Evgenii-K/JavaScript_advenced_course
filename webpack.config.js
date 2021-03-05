@@ -14,9 +14,13 @@ module.exports = {
         rules: [
             {
                 test: /\.js$/,
-                use: [
-                    { loader: 'babel-loader' }
-                ]
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env'],
+                        plugins: ['@babel/plugin-proposal-class-properties']
+                    }
+                }
             },
             {
                 test: /\.s[ac]ss$/,
