@@ -2,7 +2,6 @@
 @import 'null';
 @import 'variables';
 
-
 * {
   color: rgb(68, 67, 67);
 }
@@ -11,7 +10,6 @@
   =======================*/
 
 .wrapper {
-
   margin: 0 5px;
   min-height: 100%;
   display: flex;
@@ -19,22 +17,23 @@
   position: relative;
   overflow-x: hidden;
 
+
+  .btn__show-more {
+    align-self: center;
+  }
 }
 
 /*top
   =======================*/
 
 .top {
-
   flex-grow: 1;
-
 }
 
 /*center
   =======================*/
 
 .center {
-
   padding: 0 calc(50% - 700px) 0 calc(50% - 700px);
 }
 
@@ -48,6 +47,7 @@
   min-height: 50px;
   border: 2px solid $pageColor;
   position: relative;
+  margin-bottom: 30px;
 }
 
 .card {
@@ -72,7 +72,6 @@
       width: 16px;
       height: 16px;
       fill: $pageColor;
-
       &:hover {
         fill: red;
       }
@@ -85,7 +84,6 @@
     width: 16px;
     height: 16px;
   }
-
   &__display--none {
     display: none;
   }
@@ -98,7 +96,6 @@
     display: flex;
     justify-content: space-between;
   }
-
   &__item--wrapper {
     margin: 10px;
 
@@ -110,13 +107,10 @@
       height: 2px;
     }
   }
-
-
 }
 
 /*catalog
   =======================*/
-
 .catalog {
   display: flex;
   flex-wrap: wrap;
@@ -129,7 +123,7 @@
 .catalog__item {
   width: 220px;
   padding: 10px;
-  margin-top: 30px;
+  margin-bottom: 30px;
   border: 2px solid $pageColor;
   display: flex;
   flex-direction: column;
@@ -156,8 +150,8 @@
     align-self: flex-end;
   }
 }
-
-.btn {
+.btn,
+.btn__show-more {
   background-color: white;
   border-radius: 15px;
   border: 2px solid $pageColor;

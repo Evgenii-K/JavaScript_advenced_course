@@ -1,0 +1,10 @@
+{
+    "products": [
+        {"img": "https://picsum.photos/200?random=7", "name": "Hat", "price": 150},
+        {"img": "https://picsum.photos/200?random=8", "name": "Cap", "price": 15},
+        {"img": "https://picsum.photos/200?random=9", "name": "Skirt", "price": 50},
+        {"img": "https://picsum.photos/200?random=10", "name": "Watch", "price": 1500},
+        {"img": "https://picsum.photos/200?random=11", "name": "Dress", "price": 100},
+        {"img": "https://picsum.photos/200?random=12", "name": "Betl", "price": 25}
+    ]
+}

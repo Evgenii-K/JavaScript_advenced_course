@@ -1,0 +1,7 @@
+{
+    "dataUrl": [
+        {"url": "database/data1.json"},
+        {"url": "database/data2.json"},
+        {"url": "database/data3.json"}
+    ]
+}

@@ -51,47 +51,26 @@ class CardBtn extends Button {
     // Кнопка изменениния колличества товара и удаления из корзины
 class Quantity extends Button {
     
-    constructor(text, placeToRender, styleClass, math, name) {
+    constructor(text, placeToRender, styleClass, math, func) {
         super(text, placeToRender, styleClass);
         this._math = math;
-        this._name = name;
+        this._func = func;
     }
     
     onBtnClick() {
-    
-        const i = cardProduct.findIndex(item => item.name === this._name);
-        if (this._math == 'plus') {
-            cardProduct[i].quantity++;
-            CardListInst.createArr();
-        } else if (this._math == 'minus') {
-            if (cardProduct[i].quantity > 1) {
-                cardProduct[i].quantity--;
-                CardListInst.createArr();
-            }
-        } else if (this._math == 'delete') {
-            cardProduct.splice(i, 1);
-            CardListInst.createArr();
-        }
+        this._func(this._math);
     }
 }
     
     // Кнопка добавления в корзину
 class AddItemBtn extends Button {
     
-    constructor(text, placeToRender, styleClass, name, price) {
+    constructor(text, placeToRender, styleClass, func) {
         super(text, placeToRender, styleClass);
-        this._name = name;
-        this._price = price;
+        this._func = func;
     }
     
     onBtnClick() {
-        const i = cardProduct.findIndex(item => item.name === this._name);
-        if (i != -1) {
-            cardProduct[i].quantity++;
-            CardListInst.createArr();
-        } else {
-            cardProduct.push({name: this._name, price: this._price, quantity: 1}); 
-            CardListInst.createArr();
-        }
+        this._func();
     }
 }

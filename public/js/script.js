@@ -1,53 +1,59 @@
-
-/* Начинаем работу с интернет магазином
-1) Добавить классы товара, списка товаров (как мы это сделали на уроке). Вы можете использовать какую-то свою архитектуру приложения (делать не так как на вебинаре), главное, чтобы это было реализовано через классы.
-2) Добавить класс корзины и (возможно) класс элемента корзины (добавленного товара). Можно сделать товар в корзине и товар в главном списке одним объектом.
-3) В карточке товара основного списка добавить метод добавления в коризну. После вызова этого метода (например, по нажатии на кнопку), товар должен отображаться в списке корзины.
-4) На + (со звездочкой) - дополнительно - хочется, чтобы класс корзины и класс списка наследовался от одного родителя - AbstractList.
-5) На + (вторая звездочка) - реализовать кнопки "+" и "-", которые будут увеличивать счетчик товара в корзине или уменьшать его. Соответственно, при добавлении одинаковых товаров в корзину, дублирование блоков быть не должно.
-6) На + (третья звездочка) - добавить кнопку "Удалить все" у каждого блока в корзине + вывести суммарную стоимость всех товаров в корзине
-
-При сдаче прислать ссылку на пулл-реквест + ссылку на хероку.
-Если я зааппрувил предыдущий пулл-реквест (вам поставили "Отлично"), то просьба старый пулл-реквест смержить
-
-Если возникают сложности при работе с дз - пишите, помогу, натолкну */
+/* 
+1. Прочитать про работу с промисами: https://habr.com/ru/company/mailru/blog/269465
+2. Избавиться от хардкода при получении данных каталога в семестровом проекте. 
+   Вынести данные в файлик data.json и брать их оттуда с помощью запроса по сети.
+3. Задание на звездочку, дополнительно: разбить данные на 3 файла: data1.json, data2.json, data3.json. 
+   Пр загрузке страницы запрашивать файл data1.json и выводить данные из него. Реализовать кнопку "Показать еще", 
+   по нажатию на которую будут запрашиваться дополнительные товары из других файлов. После окончания запроса выводить 
+   дополненный список товаров 
+*/
 
 'use strict';
 
-const goods = document.querySelector('.goods'),
-      cardHeading = document.querySelector('.card__heading');
+const wrapper  = document.querySelector('.wrapper'),
+      goods = wrapper.querySelector('.goods'),
+      cardHeading = wrapper.querySelector('.card__heading');
 
 class AbstractList {
     _items = [];
     _class = '';
+    _CardListInst = null;
 
-    constructor(classItem) {
-
+    constructor(classItem, CardListInst, cardProduct) {
         this._class = classItem;
-        this.createArr();
+        this._CardListInst = CardListInst;
+        this._cardProduct = cardProduct;
     }
 
-    createArr() {
+    createArr(typeOfFile) {
+ 
+        if (typeOfFile == 'jsonFile') {
+            this.fetchGoods()
+            .then(res => {
+                if (res.status == 200) {
+                    return res.json();
+                } else {
+                    throw new Error('Json file not found!');
+                }
+            })
+            .then(data =>{
+                this.beforeRender(data.products);
+            })
+            .catch(err => {
+                console.warn(err);
+            });
+        } else if (typeOfFile == 'arrFile') {
+            this.beforeRender(this.fetchGoods());
+        }
+    }
 
-        let goods = this.fetchGoods();
-
-        goods = goods.map(cur => {
-            return new this._class(cur);
+    beforeRender (renderArr) {
+        const goods = renderArr.map(cur => {
+            return new this._class(cur, this._CardListInst);
         });
-
+        this._items = [];
         this._items.push(...goods);
-
         this.render();
-    }
-
-    fetchGoods () {
-        return [];
-    }
-
-    render() {
-        this._items.forEach(good => {
-            good.render();
-        });
     }
 }
 
@@ -55,38 +61,106 @@ class AbstractList {
 
 class ProductsList extends AbstractList {
 
-    constructor(classItem) {
-        super(classItem);
+    _dataList = []; //Список url на json файлы
+    _dataUrlPage = 0; //Номер текущей страницы
+
+    constructor(classItem, CardListInst) {
+        super(classItem, CardListInst);
+        this.fetchDataList();
     }
 
+
     fetchGoods () {
-        return products;
+
+        // Получем url json файла со списком товаров на текущей странице
+        if (this._dataList.length > 0) {
+            // let url = this._dataList[this._dataUrlPage].url;
+            let url = `${document.location.protocol}//${document.location.host}/${this._dataList[this._dataUrlPage].url}`;
+            this._dataUrlPage++;
+            // Если больше страниц нет, убираем кнопку "Показать ещё"
+            if (this._dataUrlPage == this._dataList.length) {
+                let button = wrapper.querySelector('.btn__show-more');
+                if (button) {
+                    button.remove();
+                }
+            }
+            return fetch(url);
+        } else {
+            // Если список пуст, выводим сообщение "Каталог пуст"
+            wrapper.querySelector('.catalog').innerHTML = '<div class="cart__empty">Catalog is empty</div>';
+        }
+    }
+
+    // Получаем список страниц товара из dataList.json и рендерим кнопку "Показать больше" если страниц > 1
+    fetchDataList() {
+
+        // let urlDataList = "http://localhost:3000/database/dataList.json";
+        let urlDataList = `${document.location.protocol}//${document.location.host}/database/dataList.json`;
+        fetch(urlDataList)
+            .then(res => {
+                if (res.status == 200) {
+                    return res.json();
+                } else {
+                    throw new Error('Json file not found!');
+                }
+            })
+            .then(data => {
+                const dataUrl = data.dataUrl;
+                this._dataList.push(...dataUrl);
+                if (this._dataList.length > 1) {
+                    new AddItemBtn('Show more', wrapper, 'btn__show-more', this.createArr.bind(this, 'jsonFile'));
+                }
+                this.createArr('jsonFile');
+            })
+            .catch((err) => {
+                console.warn(err);
+                // Если списка не существует, выводим сообщение "Каталог пуст"
+                wrapper.querySelector('.catalog').innerHTML = '<div class="cart__empty">Catalog is empty</div>';
+            });    
+    }
+
+    render () {
+        this._items.forEach(good => {
+            good.render();
+        });
     }
 }
 
  // Рендер корзины
 class CardList extends AbstractList {
+
+    _cardProduct = [];
     
-    constructor(classItem) {
+    constructor(classItem, cardProduct) {
         super(classItem);
+        this._CardListInst = this;
+        this._cardProduct = cardProduct;
+        this.createArr('arrFile');
     }
 
-    createArr() {
-        this._items = [];
-
-        let goods = this.fetchGoods();
-
-        goods = goods.map(cur => {
-            return new this._class(cur);
-        });
-
-        this._items.push(...goods);
-
-        this.render();
+    add (math, name, price) {
+        this._name = name;
+        this._price = price;
+        const i = this._cardProduct.findIndex(item => item.name === this._name);
+        if (math == 'plus') {
+            // Если товар есть в корзине -> увеличиваем количество
+            if (i != -1) {
+                this._cardProduct[i].quantity++;
+            } else { // Если ещё нет, добавляем в корзину
+                this._cardProduct.push({name: this._name, price: this._price, quantity: 1}); 
+            }
+        } else if (math == 'minus') {
+            if (this._cardProduct[i].quantity > 1) {
+                this._cardProduct[i].quantity--;
+            }
+        } else if (math == 'delete') {
+            this._cardProduct.splice(i, 1);
+        }
+        this.createArr('arrFile');
     }
 
     fetchGoods () {
-        return cardProduct;
+        return this._cardProduct;
     }
 
     render() {
@@ -120,11 +194,17 @@ class GoodItem {
     _img = '';
     _name = '';
     _price = 0;
+    _CardListInst = null;
 
-    constructor({img, name, price}) {
+    constructor({img, name, price}, CardListInst) {
         this._img = img;
         this._name = name;
         this._price = price;
+        this._CardListInst = CardListInst;
+    }
+
+    add() {
+        this._CardListInst.add('plus', this._name, this._price);
     }
 
     render() {
@@ -132,26 +212,33 @@ class GoodItem {
         if (placeToRender) {
             const block = document.createElement('div');
             block.classList.add('catalog__item');
-            block.innerHTML = `<img src="img/${this._img}" alt="img-item">
+            block.innerHTML = `<img src="${this._img}" alt="img-item">
                                <h3>${this._name}</h3>
                                <p>Price: ${this._price}$</p>`;
             placeToRender.appendChild(block);
-            new AddItemBtn('Add to card', block, 'btn', this._name, this._price);
+            // let addToCard = this.add.bind(this);
+            new AddItemBtn('Add to card', block, 'btn', this.add.bind(this));
         }
     }
 }
 
- // Рендер товаров в корзине
+ // Рендер карточки товара в корзине
 class CardItem {
 
     _name = '';
     _price = 0;
     _quantity = 0;
+    _CardListInst = null;
 
-    constructor({name, price, quantity}) {
+    constructor({name, price, quantity}, CardListInst) {
         this._name = name;
         this._price = price;
         this._quantity = quantity;
+        this._CardListInst = CardListInst;
+    }
+
+    add(math) {
+        this._CardListInst.add(math, this._name, this._price);
     }
 
     render() {
@@ -179,7 +266,7 @@ class CardItem {
                 quantityDiv,
                 'card__item--minus',
                 'minus',
-                this._name
+                this.add.bind(this)
             );
             quantityDiv.insertAdjacentHTML('beforeend', `${this._quantity}`);
             new Quantity(
@@ -187,14 +274,14 @@ class CardItem {
                 quantityDiv,
                 'card__item--plus',
                 'plus',
-                this._name
+                this.add.bind(this)
             );
             new Quantity(
                 '(Delete item)',
                 quantityDiv,
                 'btn--delete',
                 'delete',
-                this._name
+                this.add.bind(this)
             );
 
 
@@ -203,14 +290,11 @@ class CardItem {
     }
 }
 
+const CardListInst = new CardList(CardItem, cardProduct);
 
-
-
-new ProductsList(GoodItem);
+new ProductsList(GoodItem, CardListInst);
 
 new CardBtn('Card', goods, 'btn');
-
-const CardListInst = new CardList(CardItem);
 
 new CardBtn(
     `<svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
