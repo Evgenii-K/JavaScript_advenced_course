@@ -1,6 +1,6 @@
 'use strict';
 
-import "./sass/style.scss";
+import "../sass/style.scss";
 import CardBtn from './modules/CardBtn';
 import ProductsList from './modules/ProductsList';
 import CardList from './modules/CardList';
