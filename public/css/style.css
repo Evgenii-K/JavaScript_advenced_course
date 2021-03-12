@@ -108,7 +108,7 @@ p {
   =======================*/
 .wrapper {
   margin: 0 5px;
-  min-height: 100%;
+  min-height: calc(100% - 50px);
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -158,6 +158,21 @@ p {
   margin-bottom: 30px;
 }
 
+.footer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  min-height: 50px;
+  border: 2px solid darkgray;
+  position: relative;
+}
+
 .card {
   background-color: white;
   border: 2px solid darkgray;
@@ -169,7 +184,6 @@ p {
 
 .card__heading {
   margin: 10px;
-
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -289,7 +303,8 @@ p {
 }
 
 .btn,
-.btn__show-more {
+.btn__show-more,
+.footer__btn {
   background-color: white;
   border-radius: 15px;
   border: 2px solid darkgray;
@@ -298,8 +313,13 @@ p {
 }
 
 .btn:hover,
-.btn__show-more:hover {
+.btn__show-more:hover,
+.footer__btn:hover {
   color: red;
+}
+
+.btn__show-more {
+  margin-bottom: 30px;
 }
 
 .btn--delete {
@@ -310,5 +330,44 @@ p {
 
 .btn--delete:hover {
   color: red;
+}
+
+.feedback__form-input {
+  display: block;
+  max-width: 300px;
+  padding: 14px 16px;
+  border: 1px solid darkgray;
+  font-size: 13px;
+  line-height: 16px;
+  color: #222222;
+  margin: 20px 0;
+}
+
+.feedback__form-input::-webkit-input-placeholder {
+  font-size: 13px;
+  line-height: 16px;
+  color: #B1B1B1;
+}
+
+.feedback__form-input:-ms-input-placeholder {
+  font-size: 13px;
+  line-height: 16px;
+  color: #B1B1B1;
+}
+
+.feedback__form-input::-ms-input-placeholder {
+  font-size: 13px;
+  line-height: 16px;
+  color: #B1B1B1;
+}
+
+.feedback__form-input::placeholder {
+  font-size: 13px;
+  line-height: 16px;
+  color: #B1B1B1;
+}
+
+.feedback__form-input--attention {
+  border-color: red;
 }
 /*# sourceMappingURL=style.css.map */
