@@ -1,32 +1,21 @@
 <template>
   <div class="wrapper">
-    <Header :namePage="products" />
-    <main>
-      <div :class="$style.redHeader">Content</div>
-    </main>
+    <Header />
+    <Catalog />
   </div>
 </template>
 
 <script>
 import Header from "./components/Header.vue";
+import Catalog from "./components/Catalog.vue";
 
 export default {
-  data() {
-    return {
-      products: {
-        name: "Shops",
-        price: 125,
-      },
-    };
-  },
   components: {
     Header,
+    Catalog,
   },
 };
 </script>
 
 <style module>
-.redHeader {
-  color: blue;
-}
 </style>
