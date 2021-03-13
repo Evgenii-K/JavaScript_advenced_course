@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.catalog__wrapper">
     <CatalogItem :products="products" />
-    <button class="btn__show-more">Show more</button>
+    <button :class="$style.btn__show">Show more</button>
   </div>
 </template>
 
@@ -47,5 +47,16 @@ export default {
 .catalog__wrapper {
   display: flex;
   flex-direction: column;
+}
+.btn__show {
+  align-self: center;
+  background-color: white;
+  border-radius: 15px;
+  border: 2px solid darkgray;
+  width: 100px;
+  height: 30px;
+}
+.btn__show:hover {
+  color: red;
 }
 </style>

@@ -1,12 +1,14 @@
 <template>
   <div>
-    <nav class="goods">
-      <button class="btn" @click="cartDisplay = !cartDisplay">Cart</button>
+    <nav>
+      <button :class="$style.btn" @click="cartDisplay = !cartDisplay">
+        Cart
+      </button>
     </nav>
-    <div class="card" v-show="cartDisplay">
-      <div class="card__heading">
+    <div :class="$style.cart" v-show="cartDisplay">
+      <div :class="$style.cart__heading">
         <h3>Card list</h3>
-        <button class="card__link-close" @click="cartDisplay = !cartDisplay">
+        <button :class="$style.cart__link" @click="cartDisplay = !cartDisplay">
           <svg
             viewBox="0 0 18 18"
             fill="none"
@@ -18,7 +20,7 @@
           </svg>
         </button>
       </div>
-      <div class="card__list">
+      <div :class="$style.cart__list">
         <CartItem :cartProducts="cartProducts" />
         <h3>Total sum: 30$</h3>
       </div>
@@ -46,5 +48,43 @@ export default {
 };
 </script>
 
-<style>
+<style module>
+.btn {
+  background-color: white;
+  border-radius: 15px;
+  border: 2px solid darkgray;
+  width: 100px;
+  height: 30px;
+}
+.btn:hover {
+  color: red;
+}
+.cart {
+  background-color: white;
+  border: 2px solid darkgray;
+  width: 300px;
+  position: absolute;
+  right: calc(50% - 700px);
+  top: 50px;
+}
+.cart__heading {
+  margin: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cart__link {
+  background-color: white;
+}
+svg {
+  width: 16px;
+  height: 16px;
+  fill: darkgray;
+}
+svg:hover {
+  fill: red;
+}
+.cart__list {
+  margin: 10px;
+}
 </style>

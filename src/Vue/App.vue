@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div :class="$style.wrapper">
     <Header />
     <Catalog />
   </div>
@@ -18,4 +18,12 @@ export default {
 </script>
 
 <style module>
+.wrapper {
+  margin: 0 5px;
+  min-height: calc(100% - 50px);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+}
 </style>
