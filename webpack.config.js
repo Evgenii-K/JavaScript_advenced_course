@@ -6,7 +6,7 @@ const VuePlugins = require ('vue-loader/lib/plugin');
 module.exports = {
     entry: './src/js/scriptVue.js',
     output: {
-        filename: 'server.js',
+        filename: 'script.js',
         path: path.resolve(__dirname, 'public/js')
     },
     resolve: {

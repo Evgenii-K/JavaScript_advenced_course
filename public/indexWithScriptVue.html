@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop of clothes</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+        integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+
+<body>
+    <main>
+        <h1 @click="onHeaderClick">{{ message }}</h1>
+        <button @click="changeMessage">Click me</button><br>
+        <template>
+            <div v-show="doShowAnything">
+                Anything content
+            </div>
+        </template>
+        <button @click=" doShowAnything = !doShowAnything ">ShowAnything</button><br>
+        <input type="text" placeholder="1" v-model="inputValue">
+        <h3>Введённые данные: {{ inputValue }}</h3>
+        <div v-for="item in products">
+            <img :src=item.img alt="img-item">
+            <h3>{{item.name}}</h3>
+            <p>Price: {{ item.price }}$</p>
+        </div>
+
+    </main>
+
+    <script>
+        new Vue({
+            el: 'main',
+            data: {
+                message: 'Hello vuejs!',
+                counter: 0,
+                doShowAnything: true,
+                inputValue: '',
+                products: [{
+                        "img": "https://picsum.photos/200?random=1",
+                        "name": "Shirt",
+                        "price": 150
+                    },
+                    {
+                        "img": "https://picsum.photos/200?random=2",
+                        "name": "Socks",
+                        "price": 15
+                    },
+                    {
+                        "img": "https://picsum.photos/200?random=3",
+                        "name": "Jacke",
+                        "price": 50
+                    },
+                    {
+                        "img": "https://picsum.photos/200?random=4",
+                        "name": "Shoes",
+                        "price": 1500
+                    },
+                    {
+                        "img": "https://picsum.photos/200?random=5",
+                        "name": "Blue Shirt",
+                        "price": 100
+                    },
+                    {
+                        "img": "https://picsum.photos/200?random=6",
+                        "name": "Red Socks",
+                        "price": 25
+                    }
+                ]
+            },
+            methods: {
+                onHeaderClick() {
+                    alert(this.message);
+                },
+                changeMessage() {
+                    this.counter++;
+                    this.message = this.getComutedDate;
+                }
+            },
+            computed: {
+                getComutedDate() {
+                    console.log(`getComutedDate CALLED ${this.counter} times`);
+                    return new Date().getSeconds();
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

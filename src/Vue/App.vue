@@ -1,21 +1,32 @@
 <template>
-  <div>
-    <h1 :class="[$style.redHeader]">{{ msg }}</h1>
+  <div class="wrapper">
+    <Header :namePage="products" />
+    <main>
+      <div :class="$style.redHeader">Content</div>
+    </main>
   </div>
 </template>
 
 <script>
+import Header from "./components/Header.vue";
+
 export default {
   data() {
     return {
-      msg: "My new RED App",
+      products: {
+        name: "Shops",
+        price: 125,
+      },
     };
+  },
+  components: {
+    Header,
   },
 };
 </script>
 
 <style module>
 .redHeader {
-  color: red;
+  color: blue;
 }
 </style>
