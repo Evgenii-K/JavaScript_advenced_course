@@ -21,7 +21,7 @@
         </button>
       </div>
       <div :class="$style.cart__list">
-        <CartItem :cartProducts="cartProducts" />
+        <CartItem v-for="id of getKeyItemCart" :id="id" :key="id" />
         <h3>Total sum: 30$</h3>
       </div>
     </div>
@@ -30,20 +30,19 @@
 
 <script>
 import CartItem from "./CartItem.vue";
+import { mapGetters } from "vuex";
 
 export default {
   data() {
     return {
       cartDisplay: false,
-      cartProducts: [
-        { name: "Shirt", price: 150 },
-        { name: "Socks", price: 15 },
-        { name: "Jacke", price: 50 },
-      ],
     };
   },
   components: {
     CartItem,
+  },
+  computed: {
+    ...mapGetters(["getKeyItemCart"]),
   },
 };
 </script>

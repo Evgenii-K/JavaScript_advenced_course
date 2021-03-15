@@ -1,16 +1,30 @@
 <template>
-  <div :class="$style.item">
-    <img :src="item.img" alt="img-item" />
-    <h3 :class="$style.h">{{ item.name }}</h3>
-    <p :class="$style.p">Price: {{ item.price }}$</p>
-    <button :class="$style.btn">Add to cart</button>
+  <div>
+    <div :class="$style.item">
+      <img :src="getData[id].img" alt="img-item" />
+      <h3 :class="$style.h">{{ getData[id].name }}</h3>
+      <p :class="$style.p">Price: {{ getData[id].price }}$</p>
+      <button :class="$style.btn" @click="add">Add to cart</button>
+    </div>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+
 export default {
+  methods: {
+    ...mapActions(["addToCart"]),
+
+    add() {
+      this.addToCart(this.id);
+    },
+  },
+  computed: {
+    ...mapGetters(["getData"]),
+  },
   props: {
-    item: {},
+    id: String,
   },
 };
 </script>
