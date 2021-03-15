@@ -27,9 +27,11 @@ export default new Vuex.Store({
             if (state.itemInCart[payload].count > 1) {
                 state.itemInCart[payload].count--;
             }
+            state.keyItemCart = Object.keys(state.itemInCart);
         },
         removeFromCart(state, payload) {
             delete state.itemInCart[payload];
+            state.keyItemCart = Object.keys(state.itemInCart);
         },
     },
     getters: {
@@ -59,7 +61,7 @@ export default new Vuex.Store({
             commit('reduceInCart', id);
         },
         removeCart ({commit}, id) {
-            commit('removeFromCart', id)
+            commit('removeFromCart', id);
         }
     },
 });

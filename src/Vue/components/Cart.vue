@@ -21,7 +21,12 @@
         </button>
       </div>
       <div :class="$style.cart__list">
-        <CartItem v-for="id of getKeyItemCart" :id="id" :key="id" />
+        <CartItem
+          v-for="id of getKeyItemCart"
+          :id="id"
+          :key="id"
+          :count="getItemInCart[id].count"
+        />
         <h3>Total sum: 30$</h3>
       </div>
     </div>
@@ -42,7 +47,7 @@ export default {
     CartItem,
   },
   computed: {
-    ...mapGetters(["getKeyItemCart"]),
+    ...mapGetters(["getKeyItemCart", "getItemInCart"]),
   },
 };
 </script>

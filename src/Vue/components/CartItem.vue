@@ -9,7 +9,7 @@
       <button :class="$style.cart__minus" @click="minus">
         <i class="far fa-minus-square"></i>
       </button>
-      {{ getItemInCart[id].count }}
+      {{ count }}
       <button :class="$style.cart__plus" @click="plus">
         <i class="far fa-plus-square"></i>
       </button>
@@ -26,6 +26,7 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   props: {
     id: String,
+    count: Number,
   },
   methods: {
     ...mapActions(["addToCart", "reduceCart", "removeCart"]),
