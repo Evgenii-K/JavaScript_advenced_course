@@ -38,8 +38,8 @@ export default new Vuex.Store({
         getData: state => state.data,
         getItemOfPage: state => state.itemsOnPage,
         getFullPrice: state => {
-            const keys = state.itemsOnPage;
-            return keys.reduce((res, cur) => res + state.data[cur].price,0);
+            const keys = state.keyItemCart;
+            return keys.reduce((res, cur) => res + (state.data[cur].price * state.itemInCart[cur].count),0);
         },
         getKeyItemCart: state => state.keyItemCart,
         getItemInCart: state => state.itemInCart,

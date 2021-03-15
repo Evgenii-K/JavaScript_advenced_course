@@ -27,7 +27,7 @@
           :key="id"
           :count="getItemInCart[id].count"
         />
-        <h3>Total sum: 30$</h3>
+        <h3>Total sum: {{ getFullPrice }}$</h3>
       </div>
     </div>
   </div>
@@ -47,7 +47,7 @@ export default {
     CartItem,
   },
   computed: {
-    ...mapGetters(["getKeyItemCart", "getItemInCart"]),
+    ...mapGetters(["getKeyItemCart", "getItemInCart", "getFullPrice"]),
   },
 };
 </script>

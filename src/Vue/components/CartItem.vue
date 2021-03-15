@@ -15,7 +15,7 @@
       </button>
       <button :class="$style.btn" @click="deleteItem">(Delete item)</button>
     </div>
-    <p>Sum: 100$</p>
+    <p>Sum: {{ sumCalc }}$</p>
     <hr />
   </div>
 </template>
@@ -42,6 +42,10 @@ export default {
   },
   computed: {
     ...mapGetters(["getData", "getItemInCart"]),
+    sumCalc() {
+      let price = this.getData[this.id].price;
+      return price * this.count;
+    },
   },
 };
 </script>
