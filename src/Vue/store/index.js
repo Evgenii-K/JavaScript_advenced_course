@@ -12,8 +12,8 @@ export default new Vuex.Store({
     },
     mutations: {
         setData(state, payload) {
-            state.data = payload.newData;
-            state.itemsOnPage = Object.keys(payload.newData);
+            state.data = { ...state.data, ...payload.newData };
+            state.itemsOnPage.push(...Object.keys(payload.newData));
         },
         setToCart(state, payload) {
             if (!state.itemInCart[payload]) {
@@ -46,7 +46,9 @@ export default new Vuex.Store({
     },
     actions: {
         requestData ({ commit }, page) {
-            fetch(`/database/data${page}.json`)
+            fetch(`/database/${page}`, {
+                metod: "GET",
+            }) 
                 .then(res => {
                     return res.json();
                 })

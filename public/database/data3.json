@@ -1,10 +1,8 @@
 {
-    "products": [
-        {"img": "https://picsum.photos/200?random=13", "name": "Scarf", "price": 150},
-        {"img": "https://picsum.photos/200?random=14", "name": "Gloves", "price": 15},
-        {"img": "https://picsum.photos/200?random=15", "name": "Tie", "price": 50},
-        {"img": "https://picsum.photos/200?random=16", "name": "Trainers", "price": 1500},
-        {"img": "https://picsum.photos/200?random=17", "name": "Pyjamas", "price": 100},
-        {"img": "https://picsum.photos/200?random=18", "name": "Bikini", "price": 25}
-    ]
+    "13": {"id":13, "img": "https://picsum.photos/200?random=13", "name": "Scarf", "price": 150},
+    "14": {"id":14, "img": "https://picsum.photos/200?random=14", "name": "Gloves", "price": 15},
+    "15": {"id":15, "img": "https://picsum.photos/200?random=15", "name": "Tie", "price": 50},
+    "16": {"id":16, "img": "https://picsum.photos/200?random=16", "name": "Trainers", "price": 1500},
+    "17": {"id":17, "img": "https://picsum.photos/200?random=17", "name": "Pyjamas", "price": 100},
+    "18": {"id":18, "img": "https://picsum.photos/200?random=18", "name": "Bikini", "price": 25}
 }
