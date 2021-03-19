@@ -30,7 +30,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["getItemOfPage", "getItemInCart", "getButtonShow"]),
+    ...mapGetters(["getItemOfPage", "getButtonShow"]),
     showButton() {
       return this.getButtonShow;
     },

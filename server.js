@@ -60,7 +60,6 @@ app.get('/cartlist', (req, res) => {
 app.post('/cartlist', (req, res) => {
     const filePath = './public/database/cartlist.json';
     const data = req.body;
-    console.log(data);
 
     fs.writeFile(filePath, JSON.stringify(data), (err) => {
         if (err) {
