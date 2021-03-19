@@ -31,13 +31,15 @@
 
 const fs = require('fs');
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
+const port = 5000;
 
 app.use(express.static('./public'));
+app.use(bodyParser.json());
 
 app.get('/database/:page', (req, res) => {
     const page = req.params.page;
-    console.log(page);
     fs.readFile(`./public/database/data${page}.json`, 'utf8', (err, data) => {
         if (err) {
             console.log(`Oops: ${err}`);
@@ -46,6 +48,28 @@ app.get('/database/:page', (req, res) => {
     });
 });
 
-app.listen(5000, () => {
-    console.log('Server started');
+app.get('/cartlist', (req, res) => {
+    fs.readFile('./public/database/cartlist.json', 'utf8', (err, data) => {
+        if (err) {
+            console.log(`Oops: ${err}`);
+        }
+        res.send(data);
+    });
+});
+
+app.post('/cartlist', (req, res) => {
+    const filePath = './public/database/cartlist.json';
+    const data = req.body;
+    console.log(data);
+
+    fs.writeFile(filePath, JSON.stringify(data), (err) => {
+        if (err) {
+            console.log(`Oops: ${err}`);
+        }
+        res.send(data);
+    });
+});
+
+app.listen(port, () => {
+    console.log(`Server started at ${port} port`);
 });

@@ -15,11 +15,17 @@ export default new Vuex.Store({
             state.data = { ...state.data, ...payload.newData };
             state.itemsOnPage.push(...Object.keys(payload.newData));
         },
-        setToCart(state, payload) {
-            if (!state.itemInCart[payload]) {
-                state.itemInCart[payload] = { "id": payload, "count": 1 };
+        loadCart(state, payload) {
+            state.itemInCart = payload;
+            state.keyItemCart = Object.keys(state.itemInCart);
+        },
+        setToCart(state, id) {
+            if (!state.itemInCart[id]) {
+                const name = state.data[id].name,
+                      price = state.data[id].price;
+                state.itemInCart[id] = { "id": id, "name": name, "price": price, "count": 1 };
               } else {
-                state.itemInCart[payload].count++;
+                state.itemInCart[id].count++;
               }
             state.keyItemCart = Object.keys(state.itemInCart);
         },
@@ -39,7 +45,7 @@ export default new Vuex.Store({
         getItemOfPage: state => state.itemsOnPage,
         getFullPrice: state => {
             const keys = state.keyItemCart;
-            return keys.reduce((res, cur) => res + (state.data[cur].price * state.itemInCart[cur].count),0);
+            return keys.reduce((res, cur) => res + (state.itemInCart[cur].price * state.itemInCart[cur].count),0);
         },
         getKeyItemCart: state => state.keyItemCart,
         getItemInCart: state => state.itemInCart,
@@ -47,7 +53,7 @@ export default new Vuex.Store({
     actions: {
         requestData ({ commit }, page) {
             fetch(`/database/${page}`, {
-                metod: "GET",
+                method: "GET",
             }) 
                 .then(res => {
                     return res.json();
@@ -56,14 +62,38 @@ export default new Vuex.Store({
                     commit('setData', { newData: res });
                 });
         },
-        addToCart ({commit}, id) {
+        addToCart ({commit, dispatch}, id) {
             commit('setToCart', id);
+            dispatch('updateCartList');
         },
-        reduceCart ({commit}, id) {
+        reduceCart ({commit, dispatch}, id) {
             commit('reduceInCart', id);
+            dispatch('updateCartList');
         },
-        removeCart ({commit}, id) {
+        removeCart ({commit, dispatch}, id) {
             commit('removeFromCart', id);
-        }
+            dispatch('updateCartList');
+        },
+        updateCartList({state}) {
+            const data = state.itemInCart;
+            fetch('/cartlist', {
+                method: "post",
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+        },
+        requestCartList({commit}) {
+            fetch('/cartlist', {
+                method: "GET",
+            }) 
+                .then(res => {
+                    return res.json();
+                })
+                .then(res => {
+                    commit('loadCart', res);
+                });
+        },
     },
 });

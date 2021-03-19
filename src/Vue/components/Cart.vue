@@ -21,12 +21,7 @@
         </button>
       </div>
       <div :class="$style.cart__list">
-        <CartItem
-          v-for="id of getKeyItemCart"
-          :id="id"
-          :key="id"
-          :count="getItemInCart[id].count"
-        />
+        <CartItem v-for="id of getKeyItemCart" :id="id" :key="id" />
         <h3>Total sum: {{ getFullPrice }}$</h3>
       </div>
     </div>
@@ -35,7 +30,7 @@
 
 <script>
 import CartItem from "./CartItem.vue";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   data() {
@@ -46,8 +41,14 @@ export default {
   components: {
     CartItem,
   },
+  methods: {
+    ...mapActions(["requestCartList"]),
+  },
   computed: {
-    ...mapGetters(["getKeyItemCart", "getItemInCart", "getFullPrice"]),
+    ...mapGetters(["getKeyItemCart", "getFullPrice"]),
+  },
+  created() {
+    this.requestCartList();
   },
 };
 </script>
