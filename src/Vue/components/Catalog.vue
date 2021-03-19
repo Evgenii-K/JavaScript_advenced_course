@@ -3,7 +3,9 @@
     <div :class="$style.catalog">
       <CatalogItem v-for="id of getItemOfPage" :id="id" :key="id" />
     </div>
-    <button :class="$style.btn__show" @click="showMore">Show more</button>
+    <button v-show="showButton" :class="$style.btn__show" @click="showMore">
+      Show more
+    </button>
   </div>
 </template>
 
@@ -28,7 +30,10 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["getItemOfPage", "getItemInCart"]),
+    ...mapGetters(["getItemOfPage", "getItemInCart", "getButtonShow"]),
+    showButton() {
+      return this.getButtonShow;
+    },
   },
   created() {
     this.showMore();

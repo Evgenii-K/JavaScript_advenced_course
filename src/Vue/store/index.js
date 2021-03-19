@@ -9,6 +9,7 @@ export default new Vuex.Store({
         itemsOnPage: [],
         itemInCart: {},
         keyItemCart: [],
+        buttonShow: true,
     },
     mutations: {
         setData(state, payload) {
@@ -39,6 +40,9 @@ export default new Vuex.Store({
             delete state.itemInCart[payload];
             state.keyItemCart = Object.keys(state.itemInCart);
         },
+        removeButtonShowMore(state) {
+            state.buttonShow = false;
+        }
     },
     getters: {
         getData: state => state.data,
@@ -49,6 +53,7 @@ export default new Vuex.Store({
         },
         getKeyItemCart: state => state.keyItemCart,
         getItemInCart: state => state.itemInCart,
+        getButtonShow: state => state.buttonShow,
     },
     actions: {
         requestData ({ commit }, page) {
@@ -60,6 +65,11 @@ export default new Vuex.Store({
                 })
                 .then(res => {
                     commit('setData', { newData: res });
+                })
+                .catch( err => {
+                    if (err) {
+                        commit('removeButtonShowMore');
+                    }
                 });
         },
         addToCart ({commit, dispatch}, id) {
