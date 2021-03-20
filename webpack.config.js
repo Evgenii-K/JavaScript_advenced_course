@@ -1,15 +1,19 @@
 'use strict';
 
 const path = require ('path');
+const VuePlugins = require ('vue-loader/lib/plugin');
 
 module.exports = {
-    entry: './src/js/script.js',
+    entry: './src/js/scriptVue.js',
     output: {
-        filename: 'server.js',
+        filename: 'script.js',
         path: path.resolve(__dirname, 'public/js')
     },
-    // watch: true,
-
+    resolve: {
+        alias: {
+          'vue$': 'vue/dist/vue.esm.js'
+        }
+    },
     module: {
         rules: [
             {
@@ -23,6 +27,18 @@ module.exports = {
                 }
             },
             {
+                test: /\.css$/,
+                use: [
+                    { loader: "style-loader"},
+                    { 
+                        loader: "css-loader",
+                        options: {
+                            modules: true
+                        }
+                    }
+                ]
+            },
+            {
                 test: /\.s[ac]ss$/,
                 use: [
                     // Creates `style` nodes from JS strings
@@ -32,7 +48,16 @@ module.exports = {
                     // Compiles Sass to CSS
                     "sass-loader",
                 ]
+            },
+            {
+                test: /\.vue$/,
+                use: [
+                    { loader: 'vue-loader' }
+                ]
             }
         ]
-    }
+    },
+    plugins: [
+        new VuePlugins()
+    ]
 };
