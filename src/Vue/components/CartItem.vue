@@ -1,31 +1,51 @@
 <template>
-  <div>
-    <div :class="$style.cart__wrapper" v-for="item in cartProducts">
-      <div>
-        <h3>{{ item.name }}</h3>
-        <p>Price: {{ item.price }}$</p>
-      </div>
-      <div :class="$style.cart__quantity">
-        <p>Quantity:</p>
-        <button :class="$style.cart__minus">
-          <i class="far fa-minus-square"></i>
-        </button>
-        2
-        <button :class="$style.cart__plus">
-          <i class="far fa-plus-square"></i>
-        </button>
-        <button :class="$style.btn">(Delete item)</button>
-      </div>
-      <p>Sum: 100$</p>
-      <hr />
+  <div :class="$style.cart__wrapper">
+    <div>
+      <h3>{{ getData[id].name }}</h3>
+      <p>Price: {{ getData[id].price }}$</p>
     </div>
+    <div :class="$style.cart__quantity">
+      <p>Quantity:</p>
+      <button :class="$style.cart__minus" @click="minus">
+        <i class="far fa-minus-square"></i>
+      </button>
+      {{ count }}
+      <button :class="$style.cart__plus" @click="plus">
+        <i class="far fa-plus-square"></i>
+      </button>
+      <button :class="$style.btn" @click="deleteItem">(Delete item)</button>
+    </div>
+    <p>Sum: {{ sumCalc }}$</p>
+    <hr />
   </div>
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   props: {
-    cartProducts: "",
+    id: String,
+    count: Number,
+  },
+  methods: {
+    ...mapActions(["addToCart", "reduceCart", "removeCart"]),
+    plus() {
+      this.addToCart(this.id);
+    },
+    minus() {
+      this.reduceCart(this.id);
+    },
+    deleteItem() {
+      this.removeCart(this.id);
+    },
+  },
+  computed: {
+    ...mapGetters(["getData", "getItemInCart"]),
+    sumCalc() {
+      let price = this.getData[this.id].price;
+      return price * this.count;
+    },
   },
 };
 </script>

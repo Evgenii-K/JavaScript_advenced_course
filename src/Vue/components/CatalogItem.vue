@@ -1,29 +1,35 @@
 <template>
-  <div :class="$style.catalog">
-    <div :class="$style.item" v-for="item in products">
-      <img :src="item.img" alt="img-item" />
-      <h3 :class="$style.h">{{ item.name }}</h3>
-      <p :class="$style.p">Price: {{ item.price }}$</p>
-      <button :class="$style.btn">Add to cart</button>
+  <div>
+    <div :class="$style.item">
+      <img :src="getData[id].img" alt="img-item" />
+      <h3 :class="$style.h">{{ getData[id].name }}</h3>
+      <p :class="$style.p">Price: {{ getData[id].price }}$</p>
+      <button :class="$style.btn" @click="add">Add to cart</button>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+
 export default {
+  methods: {
+    ...mapActions(["addToCart"]),
+
+    add() {
+      this.addToCart(this.id);
+    },
+  },
+  computed: {
+    ...mapGetters(["getData"]),
+  },
   props: {
-    products: "",
+    id: String,
   },
 };
 </script>
 
 <style module>
-.catalog {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  padding: 0 calc(50% - 700px) 0 calc(50% - 700px);
-}
 .item {
   width: 220px;
   padding: 10px;
