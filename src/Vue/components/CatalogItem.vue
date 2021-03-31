@@ -1,9 +1,9 @@
 <template>
   <div>
     <div :class="$style.item">
-      <img :src="getData[id].img" alt="img-item" />
-      <h3 :class="$style.h">{{ getData[id].name }}</h3>
-      <p :class="$style.p">Price: {{ getData[id].price }}$</p>
+      <img :src="requestData.img" alt="img-item" />
+      <h3 :class="$style.h">{{ requestData.name }}</h3>
+      <p :class="$style.p">Price: {{ requestData.price }}$</p>
       <button :class="$style.btn" @click="add">Add to cart</button>
     </div>
   </div>
@@ -22,6 +22,13 @@ export default {
   },
   computed: {
     ...mapGetters(["getData"]),
+    requestData() {
+      return {
+        img: this.getData[this.id].img,
+        name: this.getData[this.id].name,
+        price: this.getData[this.id].price,
+      };
+    },
   },
   props: {
     id: String,

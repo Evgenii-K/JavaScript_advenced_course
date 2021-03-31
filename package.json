@@ -4,6 +4,7 @@
   "description": "Shop",
   "main": "server.js",
   "dependencies": {
+    "express": "^4.17.1",
     "mime": "^2.5.2"
   },
   "devDependencies": {

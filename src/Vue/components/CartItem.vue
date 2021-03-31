@@ -1,15 +1,15 @@
 <template>
   <div :class="$style.cart__wrapper">
     <div>
-      <h3>{{ getData[id].name }}</h3>
-      <p>Price: {{ getData[id].price }}$</p>
+      <h3>{{ requestData.name }}</h3>
+      <p>Price: {{ requestData.price }}$</p>
     </div>
     <div :class="$style.cart__quantity">
       <p>Quantity:</p>
       <button :class="$style.cart__minus" @click="minus">
         <i class="far fa-minus-square"></i>
       </button>
-      {{ count }}
+      {{ requestData.count }}
       <button :class="$style.cart__plus" @click="plus">
         <i class="far fa-plus-square"></i>
       </button>
@@ -26,7 +26,6 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   props: {
     id: String,
-    count: Number,
   },
   methods: {
     ...mapActions(["addToCart", "reduceCart", "removeCart"]),
@@ -41,10 +40,18 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["getData", "getItemInCart"]),
+    ...mapGetters(["getItemInCart"]),
+    requestData() {
+      return {
+        name: this.getItemInCart[this.id].name,
+        price: this.getItemInCart[this.id].price,
+        count: this.getItemInCart[this.id].count,
+      };
+    },
     sumCalc() {
-      let price = this.getData[this.id].price;
-      return price * this.count;
+      let price = this.getItemInCart[this.id].price,
+        count = this.getItemInCart[this.id].count;
+      return price * count;
     },
   },
 };
