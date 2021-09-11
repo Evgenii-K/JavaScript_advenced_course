@@ -20,15 +20,14 @@ export default new Vuex.Store({
             state.itemInCart = payload;
             state.keyItemCart = Object.keys(state.itemInCart);
         },
-        setToCart(state, id) {
-            if (!state.itemInCart[id]) {
-                const name = state.data[id].name,
-                      price = state.data[id].price;
-                state.itemInCart[id] = { "id": id, "name": name, "price": price, "count": 1 };
+        setToCart(state, key) {
+            if (!state.itemInCart[key]) {
+                const { name, price } = state.data[key];
+                state.itemInCart[key] = { "id": key, "name": name, "price": price, "count": 1 };
+                state.keyItemCart = Object.keys(state.itemInCart);
               } else {
-                state.itemInCart[id].count++;
+                state.itemInCart[key].count++;
               }
-            state.keyItemCart = Object.keys(state.itemInCart);
         },
         reduceInCart(state, payload) {
             if (state.itemInCart[payload].count > 1) {
@@ -76,8 +75,8 @@ export default new Vuex.Store({
             commit('setToCart', id);
             dispatch('updateCartList');
         },
-        reduceCart ({commit, dispatch}, id) {
-            commit('reduceInCart', id);
+        reduceCart ({commit, dispatch}, key) {
+            commit('reduceInCart', key);
             dispatch('updateCartList');
         },
         removeCart ({commit, dispatch}, id) {

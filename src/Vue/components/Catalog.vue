@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.catalog__wrapper">
     <div :class="$style.catalog">
-      <CatalogItem v-for="id of getItemOfPage" :id="id" :key="id" />
+      <CatalogItem v-for="key of getItemOfPage" :key="key" :id="key" />
     </div>
     <button v-show="showButton" :class="$style.btn__show" @click="showMore">
       Show more
@@ -38,6 +38,9 @@ export default {
   created() {
     this.showMore();
   },
+  beforeDestroy() {
+    page = 0;
+  }
 };
 </script>
 

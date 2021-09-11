@@ -32,11 +32,25 @@
 const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
+const multer = require('multer'); // Пакет работы с файлами
 const app = express();
+
 const port = process.env.PORT || 5000;
 
+// Настройка storage метода multer
+const storageConfig = multer.diskStorage({
+    destination: (req, file, cb) =>{
+        cb(null, "./public/img"); // Место хранения файла
+    },
+    filename: (req, file, cb) =>{
+        cb(null, file.originalname); // Имя файла в хранилище
+    }
+});
+
 app.use(express.static(__dirname + '/public'));
+app.use(multer({storage:storageConfig}).single('filedata'));
 app.use(bodyParser.json());
+
 
 app.get('/database/:page', (req, res) => {
     const page = req.params.page;
@@ -67,6 +81,46 @@ app.post('/cartlist', (req, res) => {
         }
         res.send(data);
     });
+});
+
+app.post('/imgUpload', (req, res) => {
+
+    const filePath = './public/database/data3.json';
+    const filedata = req.file;
+    const {name, price} = req.body
+
+    let newItem = {
+        19: {
+            id: 19,
+            img: `./img/${filedata.originalname}`,
+            name,
+            price
+        }
+    }
+
+    if(!filedata) {
+        res.send("Ошибка при загрузке файла")
+        return
+    }
+
+    fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+            console.log(`Oops: ${err}`);
+        }
+
+        data = JSON.parse(data)
+        newItem = {...data, ...newItem}
+
+        fs.writeFile(filePath, JSON.stringify(newItem), (err) => {
+            if (err) {
+                console.log(`Oops: ${err}`);
+            }
+    
+            res.send(newItem);
+        });
+    
+    });
+
 });
 
 app.listen(port, (err) => { 

@@ -21,7 +21,11 @@
         </button>
       </div>
       <div :class="$style.cart__list">
-        <CartItem v-for="id of getKeyItemCart" :id="id" :key="id" />
+        <CartItem 
+          v-for="id of getKeyItemCart"
+          :id="id"
+          :key="id"
+        />
         <h3>Total sum: {{ getFullPrice }}$</h3>
       </div>
     </div>
