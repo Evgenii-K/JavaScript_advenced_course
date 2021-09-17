@@ -1,8 +1,7 @@
 <template>
   <form
-    enctype="multipart/form-data" 
-    method="post"
-    action="/imgUpload"
+    @submit.prevent="fetchForm"
+    ref="form"
   >
     <h3>Name</h3>
     <input type="text" name="name" :class="$style.form__input" placeholder="Name" v-model="name">
@@ -81,6 +80,19 @@ export default {
 
       return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 
+    },
+    fetchForm () {
+
+      const formData = new FormData(this.$refs.form)
+
+      formData.forEach(el => {
+        console.log(el);
+      })
+
+      fetch('/imgUpload', {
+        method: "post",
+        body: formData
+      });
     }
   }
 }

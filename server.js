@@ -116,7 +116,7 @@ app.post('/imgUpload', (req, res) => {
                 console.log(`Oops: ${err}`);
             }
     
-            res.send(newItem);
+            res.send();
         });
     
     });
